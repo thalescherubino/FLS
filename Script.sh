@@ -4,9 +4,10 @@ cd /media/newhd
 
 aws s3 sync s3://f20ftsusat1321 ./
 
-cd
-
+#index the genome
 /home/carabica/bin/STAR/source/STAR runThreadN 24 --runMode genomeGenerate --genomeDir ./ --sjdbGTFfile ./ GCF_003713225.1_Cara_1.0_genomic.gff --sjdbGTFtagExonParentTranscript Parent --sjdbGTFfeatureExon exon --genomeFastaFiles ./GCF_003713225.1_Cara_1.0_genomic.fna --genomeSAindexNbases 13
+
+cd ~/RNAseq/.analysis
 
 allPath=/media/newhd/teste/
 
