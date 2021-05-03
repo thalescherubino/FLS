@@ -10,11 +10,11 @@ cd
 
 allPath=/media/newhd/teste/
 
-for library in `ls /media/newhd/teste/*1_fq.gz`
+for library in `ls /media/newhd/teste/*1.fq.gz`
 do
   echo $library
-#pigz -p 8 -d -f -k $allPath$library > `basename -s .gz $library`
+pigz -p 8 -d -f -k -c $library > `basename -s .gz $library` &
 
-#pigz -p 8 -d -f -k `basename -s 1_fq.gz $library`2_fq.gz > `basename -s 1_fq.gz $library`2_fq `
+pigz -p 8 -d -f -k -c $allPath`basename -s 1.fq.gz $library`2.fq.gz > `basename -s 1.fq.gz $library`2.fq
 
 done
