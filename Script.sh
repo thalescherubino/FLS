@@ -26,4 +26,9 @@ pigz -p 8 -d -f -k -c $allPath`basename -s 1.fq.gz $library`2.fq.gz > `basename 
 
 ~/bin/STAR/source/STAR --runThreadN 8 --genomeDir ~/genome/ --readFilesIn `basename -s .gz $library` `basename -s 1.fq.gz $library`2.fq --outFileNamePrefix  `basename -s 1.fq.gz $library` --outSAMtype BAM Unsorted
 
+rm `basename -s .gz $library` `basename -s 1.fq.gz $library`2.fq
+
+#keep only the mapped reads in bam file
+samtools view -F 4 -@ 8 `basename -s 1.fq.gz $library`Aligned.out.bam > `basename -s 1.fq.gz $library`onlyMapped.bam
+
 done
