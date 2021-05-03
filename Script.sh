@@ -29,6 +29,9 @@ pigz -p 8 -d -f -k -c $allPath`basename -s 1.fq.gz $library`2.fq.gz > `basename 
 rm `basename -s .gz $library` `basename -s 1.fq.gz $library`2.fq
 
 #keep only the mapped reads in bam file
-samtools view -F 4 -@ 8 `basename -s 1.fq.gz $library`Aligned.out.bam > `basename -s 1.fq.gz $library`onlyMapped.bam
+#samtools view -F 4 -@ 8 `basename -s 1.fq.gz $library`Aligned.out.bam > `basename -s 1.fq.gz $library`onlyMapped.bam
+#not a fuking good idea the last command, for some reason the resulting file was file 3 times bigger than the original 
+
+
 
 done
