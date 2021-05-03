@@ -15,6 +15,10 @@ do
   echo $library
 pigz -p 8 -d -f -k -c $library > `basename -s .gz $library` &
 
+#Add a 10 seconds pause just to avoid problems while decompressing the second file
+sleep 10s
+echo Resumming
+
 pigz -p 8 -d -f -k -c $allPath`basename -s 1.fq.gz $library`2.fq.gz > `basename -s 1.fq.gz $library`2.fq
 
 done
