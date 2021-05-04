@@ -39,4 +39,8 @@ rm `basename -s .gz $library` `basename -s 1.fq.gz $library`2.fq
 
 java -XX:ParallelGCThreads=8 -jar ~/bin/picard.jar SortSam I=`basename -s 1.fq.gz $library`Aligned.out.bam O=`basename -s 1.fq.gz $library`sorted.bam SORT_ORDER=queryname
 
+rm `basename -s 1.fq.gz $library`Aligned.out.bam
+
+java -XX:ParallelGCThreads=8 -jar ~/bin/picard.jar MarkDuplicates I=`basename -s 1.fq.gz $library`sorted.bam O=`basename -s 1.fq.gz $library`sorted.rmdup.bam REMOVE_DUPLICATES=true M=`basename -s 1.fq.gz $library`rmdupReport.txt
+
 done
