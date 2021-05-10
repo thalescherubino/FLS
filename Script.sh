@@ -44,6 +44,8 @@ rm `basename -s 1.fq.gz $library`Aligned.out.bam
 
 java -XX:ParallelGCThreads=8 -jar ~/bin/picard.jar MarkDuplicates I=`basename -s 1.fq.gz $library`sorted.bam O=`basename -s 1.fq.gz $library`sorted.rmdup.bam REMOVE_DUPLICATES=true M=`basename -s 1.fq.gz $library`rmdupReport.txt
 
+rm `basename -s 1.fq.gz $library`sorted.bam
+
 /usr/bin/htseq-count  -a 10 -t exon -i Parent -f bam --stranded=no `basename -s 1.fq.gz $library`sorted.rmdup.bam ../../genome/compatible.gff > `basename -s 1.fq.gz $library`counts.txt &
 
 done
