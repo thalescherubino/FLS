@@ -14,7 +14,13 @@ allPath=/media/newhd/F20FTSUSAT1321_COFayozT/
 
 for library in `ls /media/newhd/F20FTSUSAT1321_COFayozT/*1.fq.gz`
 do
-  echo $library
+
+if [ -f "`basename -s 1.fq.gz $library`counts.txt" ]; then
+echo "`basename -s 1.fq.gz $library`counts.txt exists."
+else
+echo "`basename -s 1.fq.gz $library`counts.txt does not exist."
+
+echo $library
 pigz -p 8 -d -f -k -c $library > `basename -s .gz $library` &
 
 #Add a 10 seconds pause just to avoid problems while decompressing the second file
@@ -47,5 +53,5 @@ java -XX:ParallelGCThreads=8 -jar ~/bin/picard.jar MarkDuplicates I=`basename -s
 rm `basename -s 1.fq.gz $library`sorted.bam
 
 /usr/bin/htseq-count  -a 10 -t exon -i Parent -f bam --stranded=no `basename -s 1.fq.gz $library`sorted.rmdup.bam ../../genome/compatible.gff > `basename -s 1.fq.gz $library`counts.txt &
-
+fi
 done
