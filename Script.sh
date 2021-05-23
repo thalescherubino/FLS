@@ -56,7 +56,27 @@ rm `basename -s 1.fq.gz $library`sorted.bam
 fi
 done
 
-#The Differential expression analysis stats here
+#from the compatble gff extract usefull information about the quantified transcripts
+
+ awk '{if ($3 != "exon") print $0}' compatible.gff > description.gff
+
+awk -F"\t" '{print $3"\t"$9}' description.gff > temp
+
+cat temp | tr ";" "\t" > temp2
+
+awk -F"\t" '{for(i=5;i<=NF;i++){if($i~/^product=/){a=$i}} print $2"\t"$1"\t"a}' temp2 > temp3
+
+sed -i"" 's/ID=//g' temp3
+
+sed -i"" 's/product=//g' temp3
+
+
+rm temp temp2 description.gff
+
+##################################################
+#The Differential expression analysis stats here#
+################################################
+
 
 library("edgeR")
 targets <- readTargets()
