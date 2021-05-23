@@ -70,6 +70,7 @@ sed -i"" 's/ID=//g' temp3
 
 sed -i"" 's/product=//g' temp3
 
+mv  temp3 C.a.transcriptAnnot.tab
 
 rm temp temp2 description.gff
 
