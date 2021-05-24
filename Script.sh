@@ -200,3 +200,387 @@ dev.off()
 system("open sampleClusteringHeatmap.pdf")
 
 system("open *pdf")
+
+
+#get gene data
+genData <- read.delim("C.a.transcriptAnnot.tab",sep="\t",header=F,fill=T)
+
+colnames(genData) <- c("transcriptName", "type","description")
+
+#######################
+#######CONTRASTS#######
+#######################
+
+
+#AcaFBudMar_20_x_OeiFBudMar_20
+
+lrt_AcaFBudMar_20_x_OeiFBudMar_20<- glmLRT(fit, contrast = c(-1,0,0,0,1,0,0,0,0,0,0,0))
+tTags_lrt_AcaFBudMar_20_x_OeiFBudMar_20 <- topTags(lrt_AcaFBudMar_20_x_OeiFBudMar_20, n= NULL)
+keep_sig <- matrix(tTags_lrt_AcaFBudMar_20_x_OeiFBudMar_20$table$FDR <= 0.05 & abs(tTags_lrt_AcaFBudMar_20_x_OeiFBudMar_20$table$logFC) >= 1)
+
+sig_kept_AcaFBudMar_20_x_OeiFBudMar_20<- tTags_lrt_AcaFBudMar_20_x_OeiFBudMar_20$table[keep_sig[,1],]
+
+sig_kept_AcaFBudMar_20_x_OeiFBudMar_20 <- sig_kept_AcaFBudMar_20_x_OeiFBudMar_20[order(sig_kept_AcaFBudMar_20_x_OeiFBudMar_20$logFC),]
+
+sig_kept_AcaFBudMar_20_x_OeiFBudMar_20 <-cbind( genData[match(rownames(sig_kept_AcaFBudMar_20_x_OeiFBudMar_20),genData$transcriptName),],sig_kept_AcaFBudMar_20_x_OeiFBudMar_20)
+
+write.table(sig_kept_AcaFBudMar_20_x_OeiFBudMar_20, file = "AcaFBudMar_20_x_OeiFBudMar_20.tab", row.names = T, quote = F, sep = "\t")
+
+sig_kept_AcaFBudMar_20_x_OeiFBudMar_20<- tTags_lrt_AcaFBudMar_20_x_OeiFBudMar_20$table[keep_sig[,1],]
+
+sig_kept_AcaFBudMar_20_x_OeiFBudMar_20 <- sig_kept_AcaFBudMar_20_x_OeiFBudMar_20[order(sig_kept_AcaFBudMar_20_x_OeiFBudMar_20$logFC),]
+
+###############################
+#AcaFBudMar_20_x_SemFBudMar_20
+
+lrt_AcaFBudMar_20_x_SemFBudMar_20<- glmLRT(fit, contrast = c(-1,0,0,0,0,0,0,0,1,0,0,0))
+tTags_lrt_AcaFBudMar_20_x_SemFBudMar_20 <- topTags(lrt_AcaFBudMar_20_x_SemFBudMar_20, n= NULL)
+keep_sig <- matrix(tTags_lrt_AcaFBudMar_20_x_SemFBudMar_20$table$FDR <= 0.05 & abs(tTags_lrt_AcaFBudMar_20_x_SemFBudMar_20$table$logFC) >= 1)
+
+sig_kept_AcaFBudMar_20_x_SemFBudMar_20<- tTags_lrt_AcaFBudMar_20_x_SemFBudMar_20$table[keep_sig[,1],]
+
+sig_kept_AcaFBudMar_20_x_SemFBudMar_20 <- sig_kept_AcaFBudMar_20_x_SemFBudMar_20[order(sig_kept_AcaFBudMar_20_x_SemFBudMar_20$logFC),]
+
+sig_kept_AcaFBudMar_20_x_SemFBudMar_20 <-cbind( genData[match(rownames(sig_kept_AcaFBudMar_20_x_SemFBudMar_20),genData$transcriptName),],sig_kept_AcaFBudMar_20_x_SemFBudMar_20)
+
+write.table(sig_kept_AcaFBudMar_20_x_SemFBudMar_20, file = "AcaFBudMar_20_x_SemFBudMar_20.tab", row.names = T, quote = F, sep = "\t")
+
+sig_kept_AcaFBudMar_20_x_SemFBudMar_20<- tTags_lrt_AcaFBudMar_20_x_SemFBudMar_20$table[keep_sig[,1],]
+
+sig_kept_AcaFBudMar_20_x_SemFBudMar_20 <- sig_kept_AcaFBudMar_20_x_SemFBudMar_20[order(sig_kept_AcaFBudMar_20_x_SemFBudMar_20$logFC),]
+
+###############################
+#OeiFBudMar_20_x_SemFBudMar_20
+
+lrt_OeiFBudMar_20_x_SemFBudMar_20<- glmLRT(fit, contrast = c(0,0,0,0,-1,0,0,0,1,0,0,0))
+tTags_lrt_OeiFBudMar_20_x_SemFBudMar_20 <- topTags(lrt_OeiFBudMar_20_x_SemFBudMar_20, n= NULL)
+keep_sig <- matrix(tTags_lrt_OeiFBudMar_20_x_SemFBudMar_20$table$FDR <= 0.05 & abs(tTags_lrt_OeiFBudMar_20_x_SemFBudMar_20$table$logFC) >= 1)
+
+sig_kept_OeiFBudMar_20_x_SemFBudMar_20<- tTags_lrt_OeiFBudMar_20_x_SemFBudMar_20$table[keep_sig[,1],]
+
+sig_kept_OeiFBudMar_20_x_SemFBudMar_20 <- sig_kept_OeiFBudMar_20_x_SemFBudMar_20[order(sig_kept_OeiFBudMar_20_x_SemFBudMar_20$logFC),]
+
+sig_kept_OeiFBudMar_20_x_SemFBudMar_20 <-cbind( genData[match(rownames(sig_kept_OeiFBudMar_20_x_SemFBudMar_20),genData$transcriptName),],sig_kept_OeiFBudMar_20_x_SemFBudMar_20)
+
+write.table(sig_kept_OeiFBudMar_20_x_SemFBudMar_20, file = "OeiFBudMar_20_x_SemFBudMar_20.tab", row.names = T, quote = F, sep = "\t")
+
+sig_kept_OeiFBudMar_20_x_SemFBudMar_20<- tTags_lrt_OeiFBudMar_20_x_SemFBudMar_20$table[keep_sig[,1],]
+
+sig_kept_OeiFBudMar_20_x_SemFBudMar_20 <- sig_kept_OeiFBudMar_20_x_SemFBudMar_20[order(sig_kept_OeiFBudMar_20_x_SemFBudMar_20$logFC),]
+
+###############################
+#OeiFBudMar_20_x_OeiSamJan_21
+
+lrt_OeiFBudMar_20_x_OeiSamJan_21<- glmLRT(fit, contrast = c(0,0,0,0,-1,0,0,1,0,0,0,0))
+tTags_lrt_OeiFBudMar_20_x_OeiSamJan_21 <- topTags(lrt_OeiFBudMar_20_x_OeiSamJan_21, n= NULL)
+keep_sig <- matrix(tTags_lrt_OeiFBudMar_20_x_OeiSamJan_21$table$FDR <= 0.05 & abs(tTags_lrt_OeiFBudMar_20_x_OeiSamJan_21$table$logFC) >= 1)
+
+sig_kept_OeiFBudMar_20_x_OeiSamJan_21<- tTags_lrt_OeiFBudMar_20_x_OeiSamJan_21$table[keep_sig[,1],]
+
+sig_kept_OeiFBudMar_20_x_OeiSamJan_21 <- sig_kept_OeiFBudMar_20_x_OeiSamJan_21[order(sig_kept_OeiFBudMar_20_x_OeiSamJan_21$logFC),]
+
+sig_kept_OeiFBudMar_20_x_OeiSamJan_21 <-cbind( genData[match(rownames(sig_kept_OeiFBudMar_20_x_OeiSamJan_21),genData$transcriptName),],sig_kept_OeiFBudMar_20_x_OeiSamJan_21)
+
+write.table(sig_kept_OeiFBudMar_20_x_OeiSamJan_21, file = "OeiFBudMar_20_x_OeiSamJan_21.tab", row.names = T, quote = F, sep = "\t")
+
+sig_kept_OeiFBudMar_20_x_OeiSamJan_21<- tTags_lrt_OeiFBudMar_20_x_OeiSamJan_21$table[keep_sig[,1],]
+
+sig_kept_OeiFBudMar_20_x_OeiSamJan_21 <- sig_kept_OeiFBudMar_20_x_OeiSamJan_21[order(sig_kept_OeiFBudMar_20_x_OeiSamJan_21$logFC),]
+
+###############################
+#AcaFBudMar_20_x_AcaSamJan_21
+
+lrt_AcaFBudMar_20_x_AcaSamJan_21<- glmLRT(fit, contrast = c(-1,0,0,1,0,0,0,0,0,0,0,0))
+tTags_lrt_AcaFBudMar_20_x_AcaSamJan_21 <- topTags(lrt_AcaFBudMar_20_x_AcaSamJan_21, n= NULL)
+keep_sig <- matrix(tTags_lrt_AcaFBudMar_20_x_AcaSamJan_21$table$FDR <= 0.05 & abs(tTags_lrt_AcaFBudMar_20_x_AcaSamJan_21$table$logFC) >= 1)
+
+sig_kept_AcaFBudMar_20_x_AcaSamJan_21<- tTags_lrt_AcaFBudMar_20_x_AcaSamJan_21$table[keep_sig[,1],]
+
+sig_kept_AcaFBudMar_20_x_AcaSamJan_21 <- sig_kept_AcaFBudMar_20_x_AcaSamJan_21[order(sig_kept_AcaFBudMar_20_x_AcaSamJan_21$logFC),]
+
+sig_kept_AcaFBudMar_20_x_AcaSamJan_21 <-cbind( genData[match(rownames(sig_kept_AcaFBudMar_20_x_AcaSamJan_21),genData$transcriptName),],sig_kept_AcaFBudMar_20_x_AcaSamJan_21)
+
+write.table(sig_kept_AcaFBudMar_20_x_AcaSamJan_21, file = "AcaFBudMar_20_x_AcaSamJan_21.tab", row.names = T, quote = F, sep = "\t")
+
+sig_kept_AcaFBudMar_20_x_AcaSamJan_21<- tTags_lrt_AcaFBudMar_20_x_AcaSamJan_21$table[keep_sig[,1],]
+
+sig_kept_AcaFBudMar_20_x_AcaSamJan_21 <- sig_kept_AcaFBudMar_20_x_AcaSamJan_21[order(sig_kept_AcaFBudMar_20_x_AcaSamJan_21$logFC),]
+
+
+lrt_SemFBudMar_20_x_SemSamJan_21<- glmLRT(fit, contrast = c(0,0,0,0,0,0,0,0,-1,0,0,1))
+tTags_lrt_SemFBudMar_20_x_SemSamJan_21 <- topTags(lrt_SemFBudMar_20_x_SemSamJan_21, n= NULL)
+keep_sig <- matrix(tTags_lrt_SemFBudMar_20_x_SemSamJan_21$table$FDR <= 0.05 & abs(tTags_lrt_SemFBudMar_20_x_SemSamJan_21$table$logFC) >= 1)
+
+sig_kept_SemFBudMar_20_x_SemSamJan_21<- tTags_lrt_SemFBudMar_20_x_SemSamJan_21$table[keep_sig[,1],]
+
+sig_kept_SemFBudMar_20_x_SemSamJan_21 <- sig_kept_SemFBudMar_20_x_SemSamJan_21[order(sig_kept_SemFBudMar_20_x_SemSamJan_21$logFC),]
+
+sig_kept_SemFBudMar_20_x_SemSamJan_21 <-cbind( genData[match(rownames(sig_kept_SemFBudMar_20_x_SemSamJan_21),genData$transcriptName),],sig_kept_SemFBudMar_20_x_SemSamJan_21)
+
+write.table(sig_kept_SemFBudMar_20_x_SemSamJan_21, file = "SemFBudMar_20_x_SemSamJan_21.tab", row.names = T, quote = F, sep = "\t")
+
+sig_kept_SemFBudMar_20_x_SemSamJan_21<- tTags_lrt_SemFBudMar_20_x_SemSamJan_21$table[keep_sig[,1],]
+
+sig_kept_SemFBudMar_20_x_SemSamJan_21 <- sig_kept_SemFBudMar_20_x_SemSamJan_21[order(sig_kept_SemFBudMar_20_x_SemSamJan_21$logFC),]
+
+###############################
+#AcaSamJan_21_x_OeiSamJan_21
+
+lrt_AcaSamJan_21_x_OeiSamJan_21<- glmLRT(fit, contrast = c(0,0,0,-1,0,0,0,1,0,0,0,0))
+tTags_lrt_AcaSamJan_21_x_OeiSamJan_21 <- topTags(lrt_AcaSamJan_21_x_OeiSamJan_21, n= NULL)
+keep_sig <- matrix(tTags_lrt_AcaSamJan_21_x_OeiSamJan_21$table$FDR <= 0.05 & abs(tTags_lrt_AcaSamJan_21_x_OeiSamJan_21$table$logFC) >= 1)
+
+sig_kept_AcaSamJan_21_x_OeiSamJan_21<- tTags_lrt_AcaSamJan_21_x_OeiSamJan_21$table[keep_sig[,1],]
+
+sig_kept_AcaSamJan_21_x_OeiSamJan_21 <- sig_kept_AcaSamJan_21_x_OeiSamJan_21[order(sig_kept_AcaSamJan_21_x_OeiSamJan_21$logFC),]
+
+sig_kept_AcaSamJan_21_x_OeiSamJan_21 <-cbind( genData[match(rownames(sig_kept_AcaSamJan_21_x_OeiSamJan_21),genData$transcriptName),],sig_kept_AcaSamJan_21_x_OeiSamJan_21)
+
+write.table(sig_kept_AcaSamJan_21_x_OeiSamJan_21, file = "AcaSamJan_21_x_OeiSamJan_21.tab", row.names = T, quote = F, sep = "\t")
+
+sig_kept_AcaSamJan_21_x_OeiSamJan_21<- tTags_lrt_AcaSamJan_21_x_OeiSamJan_21$table[keep_sig[,1],]
+
+sig_kept_AcaSamJan_21_x_OeiSamJan_21 <- sig_kept_AcaSamJan_21_x_OeiSamJan_21[order(sig_kept_AcaSamJan_21_x_OeiSamJan_21$logFC),]
+
+###############################
+#AcaSamJan_21_x_SemSamJan_21
+
+lrt_AcaSamJan_21_x_SemSamJan_21<- glmLRT(fit, contrast = c(0,0,0,-1,0,0,0,0,0,0,0,1))
+tTags_lrt_AcaSamJan_21_x_SemSamJan_21 <- topTags(lrt_AcaSamJan_21_x_SemSamJan_21, n= NULL)
+keep_sig <- matrix(tTags_lrt_AcaSamJan_21_x_SemSamJan_21$table$FDR <= 0.05 & abs(tTags_lrt_AcaSamJan_21_x_SemSamJan_21$table$logFC) >= 1)
+
+sig_kept_AcaSamJan_21_x_SemSamJan_21<- tTags_lrt_AcaSamJan_21_x_SemSamJan_21$table[keep_sig[,1],]
+
+sig_kept_AcaSamJan_21_x_SemSamJan_21 <- sig_kept_AcaSamJan_21_x_SemSamJan_21[order(sig_kept_AcaSamJan_21_x_SemSamJan_21$logFC),]
+
+sig_kept_AcaSamJan_21_x_SemSamJan_21 <-cbind( genData[match(rownames(sig_kept_AcaSamJan_21_x_SemSamJan_21),genData$transcriptName),],sig_kept_AcaSamJan_21_x_SemSamJan_21)
+
+write.table(sig_kept_AcaSamJan_21_x_SemSamJan_21, file = "AcaSamJan_21_x_SemSamJan_21.tab", row.names = T, quote = F, sep = "\t")
+
+sig_kept_AcaSamJan_21_x_SemSamJan_21<- tTags_lrt_AcaSamJan_21_x_SemSamJan_21$table[keep_sig[,1],]
+
+sig_kept_AcaSamJan_21_x_SemSamJan_21 <- sig_kept_AcaSamJan_21_x_SemSamJan_21[order(sig_kept_AcaSamJan_21_x_SemSamJan_21$logFC),]
+
+###############################
+#OeiSamJan_21_x_SemSamJan_21
+
+lrt_OeiSamJan_21_x_SemSamJan_21<- glmLRT(fit, contrast = c(0,0,0,0,0,0,0,-1,0,0,0,1))
+tTags_lrt_OeiSamJan_21_x_SemSamJan_21 <- topTags(lrt_OeiSamJan_21_x_SemSamJan_21, n= NULL)
+keep_sig <- matrix(tTags_lrt_OeiSamJan_21_x_SemSamJan_21$table$FDR <= 0.05 & abs(tTags_lrt_OeiSamJan_21_x_SemSamJan_21$table$logFC) >= 1)
+
+sig_kept_OeiSamJan_21_x_SemSamJan_21<- tTags_lrt_OeiSamJan_21_x_SemSamJan_21$table[keep_sig[,1],]
+
+sig_kept_OeiSamJan_21_x_SemSamJan_21 <- sig_kept_OeiSamJan_21_x_SemSamJan_21[order(sig_kept_OeiSamJan_21_x_SemSamJan_21$logFC),]
+
+sig_kept_OeiSamJan_21_x_SemSamJan_21 <-cbind( genData[match(rownames(sig_kept_OeiSamJan_21_x_SemSamJan_21),genData$transcriptName),],sig_kept_OeiSamJan_21_x_SemSamJan_21)
+
+write.table(sig_kept_OeiSamJan_21_x_SemSamJan_21, file = "OeiSamJan_21_x_SemSamJan_21.tab", row.names = T, quote = F, sep = "\t")
+
+sig_kept_OeiSamJan_21_x_SemSamJan_21<- tTags_lrt_OeiSamJan_21_x_SemSamJan_21$table[keep_sig[,1],]
+
+sig_kept_OeiSamJan_21_x_SemSamJan_21 <- sig_kept_OeiSamJan_21_x_SemSamJan_21[order(sig_kept_OeiSamJan_21_x_SemSamJan_21$logFC),]
+
+###############################
+#AcaLeafAug_20_x_OeiLeafAug_20
+
+lrt_AcaLeafAug_20_x_OeiLeafAug_20<- glmLRT(fit, contrast = c(0,-1,0,0,0,1,0,0,0,0,0,0))
+tTags_lrt_AcaLeafAug_20_x_OeiLeafAug_20 <- topTags(lrt_AcaLeafAug_20_x_OeiLeafAug_20, n= NULL)
+keep_sig <- matrix(tTags_lrt_AcaLeafAug_20_x_OeiLeafAug_20$table$FDR <= 0.05 & abs(tTags_lrt_AcaLeafAug_20_x_OeiLeafAug_20$table$logFC) >= 1)
+
+sig_kept_AcaLeafAug_20_x_OeiLeafAug_20<- tTags_lrt_AcaLeafAug_20_x_OeiLeafAug_20$table[keep_sig[,1],]
+
+sig_kept_AcaLeafAug_20_x_OeiLeafAug_20 <- sig_kept_AcaLeafAug_20_x_OeiLeafAug_20[order(sig_kept_AcaLeafAug_20_x_OeiLeafAug_20$logFC),]
+
+sig_kept_AcaLeafAug_20_x_OeiLeafAug_20 <-cbind( genData[match(rownames(sig_kept_AcaLeafAug_20_x_OeiLeafAug_20),genData$transcriptName),],sig_kept_AcaLeafAug_20_x_OeiLeafAug_20)
+
+write.table(sig_kept_AcaLeafAug_20_x_OeiLeafAug_20, file = "AcaLeafAug_20_x_OeiLeafAug_20.tab", row.names = T, quote = F, sep = "\t")
+
+sig_kept_AcaLeafAug_20_x_OeiLeafAug_20<- tTags_lrt_AcaLeafAug_20_x_OeiLeafAug_20$table[keep_sig[,1],]
+
+sig_kept_AcaLeafAug_20_x_OeiLeafAug_20 <- sig_kept_AcaLeafAug_20_x_OeiLeafAug_20[order(sig_kept_AcaLeafAug_20_x_OeiLeafAug_20$logFC),]
+
+###############################
+#AcaLeafAug_20_x_SemLeafAug_20
+
+lrt_AcaLeafAug_20_x_SemLeafAug_20<- glmLRT(fit, contrast = c(0,-1,0,0,0,0,0,0,0,1,0,0))
+tTags_lrt_AcaLeafAug_20_x_SemLeafAug_20 <- topTags(lrt_AcaLeafAug_20_x_SemLeafAug_20, n= NULL)
+keep_sig <- matrix(tTags_lrt_AcaLeafAug_20_x_SemLeafAug_20$table$FDR <= 0.05 & abs(tTags_lrt_AcaLeafAug_20_x_SemLeafAug_20$table$logFC) >= 1)
+
+sig_kept_AcaLeafAug_20_x_SemLeafAug_20<- tTags_lrt_AcaLeafAug_20_x_SemLeafAug_20$table[keep_sig[,1],]
+
+sig_kept_AcaLeafAug_20_x_SemLeafAug_20 <- sig_kept_AcaLeafAug_20_x_SemLeafAug_20[order(sig_kept_AcaLeafAug_20_x_SemLeafAug_20$logFC),]
+
+sig_kept_AcaLeafAug_20_x_SemLeafAug_20 <-cbind( genData[match(rownames(sig_kept_AcaLeafAug_20_x_SemLeafAug_20),genData$transcriptName),],sig_kept_AcaLeafAug_20_x_SemLeafAug_20)
+
+write.table(sig_kept_AcaLeafAug_20_x_SemLeafAug_20, file = "AcaLeafAug_20_x_SemLeafAug_20.tab", row.names = T, quote = F, sep = "\t")
+
+sig_kept_AcaLeafAug_20_x_SemLeafAug_20<- tTags_lrt_AcaLeafAug_20_x_SemLeafAug_20$table[keep_sig[,1],]
+
+sig_kept_AcaLeafAug_20_x_SemLeafAug_20 <- sig_kept_AcaLeafAug_20_x_SemLeafAug_20[order(sig_kept_AcaLeafAug_20_x_SemLeafAug_20$logFC),]
+
+###############################
+#OeiLeafAug_20_x_SemLeafAug_20
+
+lrt_OeiLeafAug_20_x_SemLeafAug_20<- glmLRT(fit, contrast = c(0,0,0,0,0,-1,0,0,0,1,0,0))
+tTags_lrt_OeiLeafAug_20_x_SemLeafAug_20 <- topTags(lrt_OeiLeafAug_20_x_SemLeafAug_20, n= NULL)
+keep_sig <- matrix(tTags_lrt_OeiLeafAug_20_x_SemLeafAug_20$table$FDR <= 0.05 & abs(tTags_lrt_OeiLeafAug_20_x_SemLeafAug_20$table$logFC) >= 1)
+
+sig_kept_OeiLeafAug_20_x_SemLeafAug_20<- tTags_lrt_OeiLeafAug_20_x_SemLeafAug_20$table[keep_sig[,1],]
+
+sig_kept_OeiLeafAug_20_x_SemLeafAug_20 <- sig_kept_OeiLeafAug_20_x_SemLeafAug_20[order(sig_kept_OeiLeafAug_20_x_SemLeafAug_20$logFC),]
+
+sig_kept_OeiLeafAug_20_x_SemLeafAug_20 <-cbind( genData[match(rownames(sig_kept_OeiLeafAug_20_x_SemLeafAug_20),genData$transcriptName),],sig_kept_OeiLeafAug_20_x_SemLeafAug_20)
+
+write.table(sig_kept_OeiLeafAug_20_x_SemLeafAug_20, file = "OeiLeafAug_20_x_SemLeafAug_20.tab", row.names = T, quote = F, sep = "\t")
+
+sig_kept_OeiLeafAug_20_x_SemLeafAug_20<- tTags_lrt_OeiLeafAug_20_x_SemLeafAug_20$table[keep_sig[,1],]
+
+sig_kept_OeiLeafAug_20_x_SemLeafAug_20 <- sig_kept_OeiLeafAug_20_x_SemLeafAug_20[order(sig_kept_OeiLeafAug_20_x_SemLeafAug_20$logFC),]
+
+###############################
+#AcaLeafMar_20_x_OeiLeafMar_20
+
+lrt_AcaLeafMar_20_x_OeiLeafMar_20<- glmLRT(fit, contrast = c(0,0,-1,0,0,0,1,0,0,0,0,0))
+tTags_lrt_AcaLeafMar_20_x_OeiLeafMar_20 <- topTags(lrt_AcaLeafMar_20_x_OeiLeafMar_20, n= NULL)
+keep_sig <- matrix(tTags_lrt_AcaLeafMar_20_x_OeiLeafMar_20$table$FDR <= 0.05 & abs(tTags_lrt_AcaLeafMar_20_x_OeiLeafMar_20$table$logFC) >= 1)
+
+sig_kept_AcaLeafMar_20_x_OeiLeafMar_20<- tTags_lrt_AcaLeafMar_20_x_OeiLeafMar_20$table[keep_sig[,1],]
+
+sig_kept_AcaLeafMar_20_x_OeiLeafMar_20 <- sig_kept_AcaLeafMar_20_x_OeiLeafMar_20[order(sig_kept_AcaLeafMar_20_x_OeiLeafMar_20$logFC),]
+
+sig_kept_AcaLeafMar_20_x_OeiLeafMar_20 <-cbind( genData[match(rownames(sig_kept_AcaLeafMar_20_x_OeiLeafMar_20),genData$transcriptName),],sig_kept_AcaLeafMar_20_x_OeiLeafMar_20)
+
+write.table(sig_kept_AcaLeafMar_20_x_OeiLeafMar_20, file = "AcaLeafMar_20_x_OeiLeafMar_20.tab", row.names = T, quote = F, sep = "\t")
+
+sig_kept_AcaLeafMar_20_x_OeiLeafMar_20<- tTags_lrt_AcaLeafMar_20_x_OeiLeafMar_20$table[keep_sig[,1],]
+
+sig_kept_AcaLeafMar_20_x_OeiLeafMar_20 <- sig_kept_AcaLeafMar_20_x_OeiLeafMar_20[order(sig_kept_AcaLeafMar_20_x_OeiLeafMar_20$logFC),]
+
+###############################
+#AcaLeafMar_20_x_SemLeafMar_20
+
+lrt_AcaLeafMar_20_x_SemLeafMar_20<- glmLRT(fit, contrast = c(0,0,-1,0,0,0,0,0,0,0,1,0))
+tTags_lrt_AcaLeafMar_20_x_SemLeafMar_20 <- topTags(lrt_AcaLeafMar_20_x_SemLeafMar_20, n= NULL)
+keep_sig <- matrix(tTags_lrt_AcaLeafMar_20_x_SemLeafMar_20$table$FDR <= 0.05 & abs(tTags_lrt_AcaLeafMar_20_x_SemLeafMar_20$table$logFC) >= 1)
+
+sig_kept_AcaLeafMar_20_x_SemLeafMar_20<- tTags_lrt_AcaLeafMar_20_x_SemLeafMar_20$table[keep_sig[,1],]
+
+sig_kept_AcaLeafMar_20_x_SemLeafMar_20 <- sig_kept_AcaLeafMar_20_x_SemLeafMar_20[order(sig_kept_AcaLeafMar_20_x_SemLeafMar_20$logFC),]
+
+sig_kept_AcaLeafMar_20_x_SemLeafMar_20 <-cbind( genData[match(rownames(sig_kept_AcaLeafMar_20_x_SemLeafMar_20),genData$transcriptName),],sig_kept_AcaLeafMar_20_x_SemLeafMar_20)
+
+write.table(sig_kept_AcaLeafMar_20_x_SemLeafMar_20, file = "AcaLeafMar_20_x_SemLeafMar_20.tab", row.names = T, quote = F, sep = "\t")
+
+sig_kept_AcaLeafMar_20_x_SemLeafMar_20<- tTags_lrt_AcaLeafMar_20_x_SemLeafMar_20$table[keep_sig[,1],]
+
+sig_kept_AcaLeafMar_20_x_SemLeafMar_20 <- sig_kept_AcaLeafMar_20_x_SemLeafMar_20[order(sig_kept_AcaLeafMar_20_x_SemLeafMar_20$logFC),]
+
+###############################
+#OeiLeafMar_20_x_SemLeafMar_20
+
+lrt_OeiLeafMar_20_x_SemLeafMar_20<- glmLRT(fit, contrast = c(0,0,0,0,0,0,-1,0,0,0,1,0))
+tTags_lrt_OeiLeafMar_20_x_SemLeafMar_20 <- topTags(lrt_OeiLeafMar_20_x_SemLeafMar_20, n= NULL)
+keep_sig <- matrix(tTags_lrt_OeiLeafMar_20_x_SemLeafMar_20$table$FDR <= 0.05 & abs(tTags_lrt_OeiLeafMar_20_x_SemLeafMar_20$table$logFC) >= 1)
+
+sig_kept_OeiLeafMar_20_x_SemLeafMar_20<- tTags_lrt_OeiLeafMar_20_x_SemLeafMar_20$table[keep_sig[,1],]
+
+sig_kept_OeiLeafMar_20_x_SemLeafMar_20 <- sig_kept_OeiLeafMar_20_x_SemLeafMar_20[order(sig_kept_OeiLeafMar_20_x_SemLeafMar_20$logFC),]
+
+sig_kept_OeiLeafMar_20_x_SemLeafMar_20 <-cbind( genData[match(rownames(sig_kept_OeiLeafMar_20_x_SemLeafMar_20),genData$transcriptName),],sig_kept_OeiLeafMar_20_x_SemLeafMar_20)
+
+write.table(sig_kept_OeiLeafMar_20_x_SemLeafMar_20, file = "OeiLeafMar_20_x_SemLeafMar_20.tab", row.names = T, quote = F, sep = "\t")
+
+sig_kept_OeiLeafMar_20_x_SemLeafMar_20<- tTags_lrt_OeiLeafMar_20_x_SemLeafMar_20$table[keep_sig[,1],]
+
+sig_kept_OeiLeafMar_20_x_SemLeafMar_20 <- sig_kept_OeiLeafMar_20_x_SemLeafMar_20[order(sig_kept_OeiLeafMar_20_x_SemLeafMar_20$logFC),]
+
+###############################
+#AcaLeafMar_20_x_AcaLeafAug_20
+
+lrt_AcaLeafMar_20_x_AcaLeafAug_20<- glmLRT(fit, contrast = c(0,1,-1,0,0,0,0,0,0,0,0,0))
+tTags_lrt_AcaLeafMar_20_x_AcaLeafAug_20 <- topTags(lrt_AcaLeafMar_20_x_AcaLeafAug_20, n= NULL)
+keep_sig <- matrix(tTags_lrt_AcaLeafMar_20_x_AcaLeafAug_20$table$FDR <= 0.05 & abs(tTags_lrt_AcaLeafMar_20_x_AcaLeafAug_20$table$logFC) >= 1)
+
+sig_kept_AcaLeafMar_20_x_AcaLeafAug_20<- tTags_lrt_AcaLeafMar_20_x_AcaLeafAug_20$table[keep_sig[,1],]
+
+sig_kept_AcaLeafMar_20_x_AcaLeafAug_20 <- sig_kept_AcaLeafMar_20_x_AcaLeafAug_20[order(sig_kept_AcaLeafMar_20_x_AcaLeafAug_20$logFC),]
+
+sig_kept_AcaLeafMar_20_x_AcaLeafAug_20 <-cbind( genData[match(rownames(sig_kept_AcaLeafMar_20_x_AcaLeafAug_20),genData$transcriptName),],sig_kept_AcaLeafMar_20_x_AcaLeafAug_20)
+
+write.table(sig_kept_AcaLeafMar_20_x_AcaLeafAug_20, file = "AcaLeafMar_20_x_AcaLeafAug_20.tab", row.names = T, quote = F, sep = "\t")
+
+sig_kept_AcaLeafMar_20_x_AcaLeafAug_20<- tTags_lrt_AcaLeafMar_20_x_AcaLeafAug_20$table[keep_sig[,1],]
+
+sig_kept_AcaLeafMar_20_x_AcaLeafAug_20 <- sig_kept_AcaLeafMar_20_x_AcaLeafAug_20[order(sig_kept_AcaLeafMar_20_x_AcaLeafAug_20$logFC),]
+
+###############################
+#OeiLeafMar_20_x_OeiLeafAug_20
+
+lrt_OeiLeafMar_20_x_OeiLeafAug_20<- glmLRT(fit, contrast = c(0,0,0,0,0,1,-1,0,0,0,0,0))
+tTags_lrt_OeiLeafMar_20_x_OeiLeafAug_20 <- topTags(lrt_OeiLeafMar_20_x_OeiLeafAug_20, n= NULL)
+keep_sig <- matrix(tTags_lrt_OeiLeafMar_20_x_OeiLeafAug_20$table$FDR <= 0.05 & abs(tTags_lrt_OeiLeafMar_20_x_OeiLeafAug_20$table$logFC) >= 1)
+
+sig_kept_OeiLeafMar_20_x_OeiLeafAug_20<- tTags_lrt_OeiLeafMar_20_x_OeiLeafAug_20$table[keep_sig[,1],]
+
+sig_kept_OeiLeafMar_20_x_OeiLeafAug_20 <- sig_kept_OeiLeafMar_20_x_OeiLeafAug_20[order(sig_kept_OeiLeafMar_20_x_OeiLeafAug_20$logFC),]
+
+sig_kept_OeiLeafMar_20_x_OeiLeafAug_20 <-cbind( genData[match(rownames(sig_kept_OeiLeafMar_20_x_OeiLeafAug_20),genData$transcriptName),],sig_kept_OeiLeafMar_20_x_OeiLeafAug_20)
+
+write.table(sig_kept_OeiLeafMar_20_x_OeiLeafAug_20, file = "OeiLeafMar_20_x_OeiLeafAug_20.tab", row.names = T, quote = F, sep = "\t")
+
+sig_kept_OeiLeafMar_20_x_OeiLeafAug_20<- tTags_lrt_OeiLeafMar_20_x_OeiLeafAug_20$table[keep_sig[,1],]
+
+sig_kept_OeiLeafMar_20_x_OeiLeafAug_20 <- sig_kept_OeiLeafMar_20_x_OeiLeafAug_20[order(sig_kept_OeiLeafMar_20_x_OeiLeafAug_20$logFC),]
+
+###############################
+#SemLeafMar_20_x_SemLeafAug_20
+
+lrt_SemLeafMar_20_x_SemLeafAug_20<- glmLRT(fit, contrast = c(0,0,0,0,0,0,0,0,0,1,-1,0))
+tTags_lrt_SemLeafMar_20_x_SemLeafAug_20 <- topTags(lrt_SemLeafMar_20_x_SemLeafAug_20, n= NULL)
+keep_sig <- matrix(tTags_lrt_SemLeafMar_20_x_SemLeafAug_20$table$FDR <= 0.05 & abs(tTags_lrt_SemLeafMar_20_x_SemLeafAug_20$table$logFC) >= 1)
+
+sig_kept_SemLeafMar_20_x_SemLeafAug_20<- tTags_lrt_SemLeafMar_20_x_SemLeafAug_20$table[keep_sig[,1],]
+
+sig_kept_SemLeafMar_20_x_SemLeafAug_20 <- sig_kept_SemLeafMar_20_x_SemLeafAug_20[order(sig_kept_SemLeafMar_20_x_SemLeafAug_20$logFC),]
+
+sig_kept_SemLeafMar_20_x_SemLeafAug_20 <-cbind( genData[match(rownames(sig_kept_SemLeafMar_20_x_SemLeafAug_20),genData$transcriptName),],sig_kept_SemLeafMar_20_x_SemLeafAug_20)
+
+write.table(sig_kept_SemLeafMar_20_x_SemLeafAug_20, file = "SemLeafMar_20_x_SemLeafAug_20.tab", row.names = T, quote = F, sep = "\t")
+
+sig_kept_SemLeafMar_20_x_SemLeafAug_20<- tTags_lrt_SemLeafMar_20_x_SemLeafAug_20$table[keep_sig[,1],]
+
+sig_kept_SemLeafMar_20_x_SemLeafAug_20 <- sig_kept_SemLeafMar_20_x_SemLeafAug_20[order(sig_kept_SemLeafMar_20_x_SemLeafAug_20$logFC),]
+
+#########################################
+#####GO enrichment############################
+##########################################
+awk '{if ($2 != "") print $0 }' GO_terms_NCBI_AnnotationOnePerRow.txt > GO.C.a.OnePerRow.txt
+
+for folder in `ls -d */`
+do
+  echo $folder
+  cd $folder/DOWN
+  sed -i "" 's/rna-//g' rnaIDs.tab
+  for rna in `awk '{print $1}' rnaIDs.tab`
+  do
+    grep $rna ../../namesEquivalences.tab >> temp
+  done
+  for prot in `awk '{print $2}' temp`
+  do
+    grep $prot ../../GO.C.a.OnePerRow.txt | tee -a GOterms.tab
+  done
+
+  cd ../UP
+
+  sed -i "" 's/rna-//g' rnaIDs.tab
+
+  for rna in `awk '{print $1}' rnaIDs.tab`
+  do
+    grep $rna ../../namesEquivalences.tab >> temp
+  done
+  for prot in `awk '{print $2}' temp`
+  do
+    grep $prot ../../GO.C.a.OnePerRow.txt | tee -a GOterms.tab
+  done
+  cd ../../
+done
