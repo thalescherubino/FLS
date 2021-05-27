@@ -74,6 +74,36 @@ mv  temp3 C.a.transcriptAnnot.tab
 
 rm temp temp2 description.gff
 
+
+##################################################
+################# Alignment Stats ###############
+################################################
+
+
+alignmentStats <- read.delim("alignmentStats.tab",row.names=1)
+
+alignmentStats$effectiveCounts <- fit$samples$lib.size
+
+cols <- c("#4859c2", "#6b38b8","#39abad","#40b84a","#b06042")
+
+meanMatrix <- apply(alignmentStats,2,mean)
+sdMatrix <- apply(alignmentStats,2,sd)
+
+
+pdf("AlignmentData.pdf",h=10,w=17)
+barplot <- barplot(meanMatrix,beside=T,col=cols, yaxt='n',xaxt='n',ylim=c(0,max(meanMatrix +sdMatrix)*1.164),main ="Mean Number of Fragments Per Sample",cex.main=2.3,width=1.2,space=c(.2,1))
+
+title(ylab="Millions of RNA fragments",cex.lab=1.5,line=2.7)
+
+axis(2,seq(0,60000000,5000000),labels=F)
+mtext(side=2,text=seq(0,60,5),outer=F,las=2,line=.8,at=seq(0,60000000,5000000),cex=1.5)
+mtext(side=1,text=c("Sequenced And QC","Uniquelly Mapped","Multi Mappers","Unmapped","Effective Counts"),outer=F,line=2,at=barplot,cex=2)
+
+arrows(x0 = barplot, y0 = meanMatrix - sdMatrix, x1 = barplot, y1=meanMatrix + sdMatrix ,code=3,angle=90,length=0.05,col="black",lwd=3.5)
+dev.off()
+
+system("open AlignmentData.pdf")
+
 ##################################################
 #The Differential expression analysis stats here#
 ################################################
@@ -550,6 +580,182 @@ write.table(sig_kept_SemLeafMar_20_x_SemLeafAug_20, file = "SemLeafMar_20_x_SemL
 sig_kept_SemLeafMar_20_x_SemLeafAug_20<- tTags_lrt_SemLeafMar_20_x_SemLeafAug_20$table[keep_sig[,1],]
 
 sig_kept_SemLeafMar_20_x_SemLeafAug_20 <- sig_kept_SemLeafMar_20_x_SemLeafAug_20[order(sig_kept_SemLeafMar_20_x_SemLeafAug_20$logFC),]
+
+
+################
+#General Plots##
+################
+
+sig <- list()
+
+sig <- ls(pattern="sig_kept")
+
+dedupKeepedNames <- c()
+
+for (DE in sig){
+dedupKeepedNames <- c(dedupKeepedNames,rownames(get(DE)))
+
+}
+
+dedupKeepedNames <- unique(dedupKeepedNames)
+
+#awk -F"\t" '$3=="exon"{ID=substr($9, length($9)-14, 37); L[ID]+=$5-$4+1}END{for(i in L){print i"\t"L[i]}}' compatible.gff > processed.geneLenght.txt
+
+#cat processed.geneLenght.txt | sed 's/=/rna-/g' > geneLenths.txt
+
+genes.len <- read.table("geneLenths.txt",header = F)
+analysis_matrix$genes <- genes.len
+colnames(analysis_matrix$genes) <- c("names", "lengths")
+
+DE.RPKM.matrix <- rpkm(analysis_matrix,normalized.lib.sizes=T)
+
+DE.RPKM.matrix <- rpkm(analysis_matrix[intersect(dedupKeepedNames, rownames(DE.RPKM.matrix)),],normalized.lib.sizes=T)
+
+
+
+OeiFBudMar_20.means <- as.matrix(rowMeans(DE.RPKM.matrix[,c(1:4)]))
+OeiLeafMar_20.means <- as.matrix(rowMeans(DE.RPKM.matrix[,c(5:8)]))
+AcaFBudMar_20.means <- as.matrix(rowMeans(DE.RPKM.matrix[,c(9:12)]))
+AcaLeafMar_20.means <- as.matrix(rowMeans(DE.RPKM.matrix[,c(13:16)]))
+SemFBudMar_20.means <- as.matrix(rowMeans(DE.RPKM.matrix[,c(17:20)]))
+SemLeafMar_20.means <- as.matrix(rowMeans(DE.RPKM.matrix[,c(21:24)]))
+OeiLeafAug_20.means <- as.matrix(rowMeans(DE.RPKM.matrix[,c(25:28)]))
+AcaLeafAug_20.means <- as.matrix(rowMeans(DE.RPKM.matrix[,c(29:32)]))
+SemLeafAug_20.means <- as.matrix(rowMeans(DE.RPKM.matrix[,c(33:36)]))
+OeiSamJan_21.means <- as.matrix(rowMeans(DE.RPKM.matrix[,c(37:40)]))
+AcaSamJan_21.means <- as.matrix(rowMeans(DE.RPKM.matrix[,c(41:44)]))
+SemSamJan_21.means <- as.matrix(rowMeans(DE.RPKM.matrix[,c(45:48)]))
+
+per_condition_means <- cbind(AcaFBudMar_20.means,
+SemFBudMar_20.means,
+OeiFBudMar_20.means,
+AcaSamJan_21.means,
+SemSamJan_21.means,
+OeiSamJan_21.means,
+AcaLeafMar_20.means,
+SemLeafMar_20.means,
+OeiLeafMar_20.means,
+AcaLeafAug_20.means,
+SemLeafAug_20.means,
+OeiLeafAug_20.means)
+
+colnames(per_condition_means) <- c("AcaFBudMar_20",
+"SemFBudMar_20",
+"OeiFBudMar_20",
+"AcaSamJan_21",
+"SemSamJan_21",
+"OeiSamJan_21",
+"AcaLeafMar_20",
+"SemLeafMar_20",
+"OeiLeafMar_20",
+"AcaLeafAug_20",
+"SemLeafAug_20",
+"OeiLeafAug_20")
+
+
+blue.red <- colorRampPalette(c("white","#d93e23"))(8)
+
+
+library(gplots)
+pdf("heatmap_log_absolute_Expression_DE.pdf", he=10,wi=15)
+heatmap.2(log(per_condition_means+1,10),dendrogram = "both",trace = "none",key = T, Colv=T,Rowv=T,margins = c(5, 2),offsetRow =100, key.xlab="Log 10 RPKM + 1", key.ylab="", keysize =.9 , key.title="", cexRow=1, cexCol=1,srtCol=20,adjCol=c(0.5,1.5), offsetCol = .3, col=blue.red, denscol="green", densadj = 5,colsep=c(0:ncol(per_condition_means)),sepcolor="black",sepwidth=c(0.01, 0.01))
+dev.off()
+
+system("open heatmap_log_absolute_Expression_DE.pdf")
+
+
+OeiFBudMar_20.ste <- as.matrix(apply(DE.RPKM.matrix[,c(1:4)],1,sd)/sqrt(4))
+OeiLeafMar_20.ste <- as.matrix(apply(DE.RPKM.matrix[,c(5:8)],1,sd)/sqrt(4))
+AcaFBudMar_20.ste <- as.matrix(apply(DE.RPKM.matrix[,c(9:12)],1,sd)/sqrt(4))
+AcaLeafMar_20.ste <- as.matrix(apply(DE.RPKM.matrix[,c(13:16)],1,sd)/sqrt(4))
+SemFBudMar_20.ste <- as.matrix(apply(DE.RPKM.matrix[,c(17:20)],1,sd)/sqrt(4))
+SemLeafMar_20.ste <- as.matrix(apply(DE.RPKM.matrix[,c(21:24)],1,sd)/sqrt(4))
+OeiLeafAug_20.ste <- as.matrix(apply(DE.RPKM.matrix[,c(25:28)],1,sd)/sqrt(4))
+AcaLeafAug_20.ste <- as.matrix(apply(DE.RPKM.matrix[,c(29:32)],1,sd)/sqrt(4))
+SemLeafAug_20.ste <- as.matrix(apply(DE.RPKM.matrix[,c(33:36)],1,sd)/sqrt(4))
+OeiSamJan_21.ste <- as.matrix(apply(DE.RPKM.matrix[,c(37:40)],1,sd)/sqrt(4))
+AcaSamJan_21.ste <- as.matrix(apply(DE.RPKM.matrix[,c(41:44)],1,sd)/sqrt(4))
+SemSamJan_21.ste <- as.matrix(apply(DE.RPKM.matrix[,c(45:48)],1,sd)/sqrt(4))
+
+per_condition_sde <-
+
+cbind(AcaFBudMar_20.ste,
+SemFBudMar_20.ste,
+OeiFBudMar_20.ste,
+AcaSamJan_21.ste,
+SemSamJan_21.ste,
+OeiSamJan_21.ste,
+AcaLeafMar_20.ste,
+SemLeafMar_20.ste,
+OeiLeafMar_20.ste,
+AcaLeafAug_20.ste,
+SemLeafAug_20.ste,
+OeiLeafAug_20.ste)
+
+colnames(per_condition_sde) <- c("AcaFBudMar_20",
+"SemFBudMar_20",
+"OeiFBudMar_20",
+"AcaSamJan_21",
+"SemSamJan_21",
+"OeiSamJan_21",
+"AcaLeafMar_20",
+"SemLeafMar_20",
+"OeiLeafMar_20",
+"AcaLeafAug_20",
+"SemLeafAug_20",
+"OeiLeafAug_20")
+
+
+cols <- c(rep("#1c5414"),rep("#731c23"))
+
+
+
+cols <- colorRampPalette(c("#c24a3a","#522c28","#7bc437"))(12)
+
+
+i=10
+system("mkdir barplot")
+for (gene in rownames(per_condition_means)){
+print(gene)
+limitOfY <- max(per_condition_means[gene,]+per_condition_sde[gene,]/sqrt(1))*1.20
+pdf(paste0("./barplot/barplot",gene,".pdf"),h=5,w=20)
+barplot <- barplot(per_condition_means[gene,],beside=T,col=cols, yaxt='n',xaxt='n',ylim=c(0,limitOfY),main =paste("Expression of gene",gene),cex.main=1,width=1.2)
+
+title(ylab="FPKM",cex.lab=1.5,line=2.3)
+
+#legend("topleft",legend=colnames(per_condition_sde),col = cols,pch=19,cex=1.5)
+
+
+if(limitOfY <= 10 ){
+i=1
+}
+if(limitOfY > 10 & limitOfY <= 50 ){
+i=3
+}
+if( limitOfY > 50 & limitOfY <= 100 ){
+i=10
+}
+if( limitOfY > 100 & limitOfY <= 1000 ){
+i=50
+}
+if( limitOfY > 1000 & limitOfY <= 10000 ){
+i=100
+}
+if( limitOfY > 10000 & limitOfY <= 100000 ){
+i=1000
+}
+
+axis(2,seq(0,limitOfY,i),labels=F)
+mtext(side=2,text=seq(0,limitOfY,i),outer=F,las=2,line=.8,at=seq(0,limitOfY,i),cex=.8)
+
+
+mtext(side=1,text=colnames(per_condition_sde),outer=F,line=1.2,at=barplot,cex=1,srt=30)
+
+arrows(x0 = barplot, y0 = per_condition_means[gene,] - per_condition_sde[gene,], x1 = barplot, y1=per_condition_means[gene,] + per_condition_sde[gene,] ,code=3,angle=90,length=0.05,col="black",lwd=1.3)
+
+dev.off()
+
+}
 
 #########################################
 #####GO enrichment############################
