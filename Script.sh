@@ -719,7 +719,8 @@ for (gene in rownames(per_condition_means)){
 print(gene)
 limitOfY <- max(per_condition_means[gene,]+per_condition_sde[gene,]/sqrt(1))*1.20
 pdf(paste0("./barplot/barplot",gene,".pdf"),h=5,w=20)
-barplot <- barplot(per_condition_means[gene,],beside=T,col=cols, yaxt='n',xaxt='n',ylim=c(0,limitOfY),main =paste("Expression of gene",gene),cex.main=1,width=1.2)
+barplot <- barplot(per_condition_means[gene,],beside=T,col=
+, yaxt='n',xaxt='n',ylim=c(0,limitOfY),main =paste("Expression of gene",gene),cex.main=1,width=1.2)
 
 title(ylab="FPKM",cex.lab=1.5,line=2.3)
 
@@ -756,6 +757,112 @@ arrows(x0 = barplot, y0 = per_condition_means[gene,] - per_condition_sde[gene,],
 dev.off()
 
 }
+
+system("mkdir volcanoes")
+#l <- list()
+
+l <- ls(pattern="tTags_lrt_")
+
+#Volcano plots
+for (comp in l){
+print(comp)
+FC <-  get(comp)$table$logFC
+names(FC) <- rownames(get(comp)$table)
+print(max(FC))
+
+FDR <- get(comp)$table$FDR
+DATA <- cbind(FC,FDR)
+print(-log(min(FDR),10))
+
+pdf(paste0("./volcanoes/",comp,".pdf"),h=5,w=5)
+par(mar = c(4.1, 4.1, 4.1, 2.1))
+
+plot(-log(DATA[,2],10) ~ DATA[,1],xlim=c(-16,16),ylim=c(0,150),cex=.1,col="grey",yaxt='n',xaxt='n',ylab="",xlab="")
+
+title(main=gsub("tTags_lrt_","" ,comp),ylab="-log10(FDR)",cex.lab=.9,line=2.3,xlab="log2FC")
+
+legend("topleft",legend=c("Up-regulated","Not DE","Down-regulated"),col = c("#d93e23","grey","#236cd9" ),pch=19,cex=.6)
+
+axis(2,seq(0,150,10),labels=F)
+mtext(side=2,text=seq(0,150,10),outer=F,las=2,line=.8,at=seq(0,150,10),cex=.8)
+
+text(x=-12.5,y=-log(0.0000001,10)-.6,labels="FDR = 0.05",las=2, col = "#0e4f34",cex=.9)
+
+axis(1,seq(-16,16,4),labels=F)
+mtext(side=1,text=seq(-16,16,4),outer=F,las=1,line=.8,at=seq(-16,16,4),cex=.8)
+
+axis(1,0,labels=F)
+mtext(side=1,text=0,outer=F,las=1,line=.8,at=0,cex=.8)
+
+points(-log(DATA[,2][DATA[,2] < 0.05 & DATA[,1] >= 1],10) ~DATA[,1][DATA[,2] < 0.05 & DATA[,1] >= 1], col = "#d93e23",cex=.1)
+
+points(-log(DATA[,2][DATA[,2] < 0.05 & DATA[,1] <= -1],10) ~ DATA[,1][DATA[,2] < 0.05 & DATA[,1] <= -1], col = "#236cd9",cex=.1)
+
+abline(v= 1, col = "#0e4f34",lty = 2)
+abline(v= -1, col = "#0e4f34",lty = 2)
+abline(h= -log(0.05,10), col = "#0e4f34",lty = 2)
+
+#lightBlue "#8ce4ff"
+
+
+#text(-log(tail(DATA[order(DATA[,1]),2]),10) ~ tail(DATA[order(DATA[,1]),1]),labels= names(tail(DATA[order(DATA[,1]),1])),cex=.25,pos=1)
+
+dev.off()
+}
+
+
+
+
+system("mkdir MA")
+
+for (comp in l){
+print(comp)
+FC <-  get(comp)$table$logFC
+names(FC) <- rownames(get(comp)$table)
+
+FDR <- get(comp)$table$FDR
+lCPM <- get(comp)$table$logCPM
+DATA <- cbind(FC,lCPM,FDR)
+
+print(max(lCPM))
+
+
+pdf(paste0("./MA/",comp,".pdf"),h=5,w=5)
+par(mar = c(4.1, 4.1, 4.1, 2.1))
+
+plot(DATA[,1] ~ DATA[,2] ,xlim=c(0,12),ylim=c(-16,16),cex=.1,col="grey",yaxt='n',xaxt='n',ylab="",xlab="")
+
+title(main=gsub("tTags_lrt_","" ,comp),ylab="log2FC",cex.lab=.9,line=2.3,xlab="logCounts (CPM)")
+
+#legend("topleft",legend=c("Up-regulated","Not DE","Down-regulated"),col = c("#d93e23","grey","#236cd9" ),pch=19,cex=.6)
+
+axis(1,seq(0,12,2),labels=F)
+mtext(side=1,text=seq(0,12,2),outer=F,las=1,line=.8,at=seq(0,12,2),cex=.8)
+
+#text(x=-8.5,y=-log(0.05,10) +1.5,labels="FDR = 0.05",las=2, col = "#0e4f34",cex=.9)
+
+axis(2,seq(-16,16,2),labels=F)
+mtext(side=2,text=seq(-16,16,2),outer=F,las=1,line=.8,at=seq(-16,16,2),cex=.8)
+
+#axis(1,0,labels=F)
+#mtext(side=1,text=0,outer=F,las=1,line=.8,at=0,cex=.8)
+
+points(DATA[,1][DATA[,3] < 0.05 & DATA[,1] >= 1] ~DATA[,2][DATA[,3] < 0.05 & DATA[,1] >= 1], col = "#d93e23",cex=.1)
+
+points(DATA[,1][DATA[,3] < 0.05 & DATA[,1] <= -1] ~DATA[,2][DATA[,3] < 0.05 & DATA[,1] <= -1], col = "#236cd9",cex=.1)
+
+#abline(v= 1, col = "#0e4f34",lty = 2)
+#abline(v= -1, col = "#0e4f34",lty = 2)
+#abline(h= -log(0.05,10), col = "#0e4f34",lty = 2)
+
+#lightBlue "#8ce4ff"
+
+#DOWN NAMES
+#text(DATA[DownInside,1] ~ DATA[DownInside,2],labels= DownInside,cex=.25,pos=1)
+
+dev.off()
+}
+
 
 #########################################
 #####GO enrichment############################
