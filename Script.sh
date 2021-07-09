@@ -1122,6 +1122,46 @@ key.title="",
 dev.off()
 
 
+########################
+#RealFloralIdentitySAMandFBud.tab#
+######################
+
+RealFloralIdentitySAMandFBud <- read.table("RealFloralIdentitySAMandFBud.tab", sep = "\t")
+
+RealFloralIdentitySAMandFBudDescription <- genData[ genData$transcriptName %in% RealFloralIdentitySAMandFBud$V1,]
+
+RealFloralIdentitySAMandFBudRPKM <- DE.RPKM.matrix[,c(grep("FBud|Sam",colnames(DE.RPKM.matrix)))]
+
+selectedGenes <- SAMandFBudRPKM[rownames(RealFloralIdentitySAMandFBudRPKM) %in% RealFloralIdentitySAMandFBud$V1,]
+
+rownames(selectedGenes) <- paste(RealFloralIdentitySAMandFBudDescription[match(rownames(selectedGenes),RealFloralIdentitySAMandFBudDescription$transcriptName),1],RealFloralIdentitySAMandFBudDescription[match(rownames(selectedGenes),RealFloralIdentitySAMandFBudDescription$transcriptName),3], sep = "-")
+
+rownames(selectedGenes) <- gsub( "rna-","",rownames(selectedGenes))
+
+LogSelectedGenes <- log(selectedGenes+1,10)
+
+LogSelectedGenes <- LogSelectedGenes[rowMeans(LogSelectedGenes) >= 1,]
+
+
+pdf("RealFloralIdentitySAMandFBud.pdf",h=8.08,w=8.08)
+par(cex.main=1)
+heatmap.2(LogSelectedGenes,
+trace = "none",
+key = T,
+margins = c(10, 15),
+offsetRow = .001,
+ key.xlab="Log(10) FPKM + 1",
+  key.ylab="",
+keysize =1,
+key.title="",
+  cexRow=.457,
+  srtRow=330,
+    col=myCol,
+    main="Floral Identity Genes in SAM and FBuds",
+    density.info="density",
+    cexCol=.6)
+dev.off()
+
 #########################################
 #####GO enrichment############################
 ##########################################
