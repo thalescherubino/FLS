@@ -864,6 +864,264 @@ dev.off()
 }
 
 
+#######################
+#####Heatmap selected##
+#######################
+
+#DE.RPKM.matrix
+
+#FloralIdentityLeaf.tab
+
+FloralIdentityLeaves <- read.table("FloralIdentityLeaf.tab", sep = "\t")
+
+FloralIdentityLeavesDescription <- genData[ genData$transcriptName %in% FloralIdentityLeaves$V1,]
+
+leavesRPKM <- DE.RPKM.matrix[,c(grep("Leaf",colnames(DE.RPKM.matrix)))]
+
+selectedGenes <- leavesRPKM[rownames(leavesRPKM) %in% FloralIdentityLeaves$V1,]
+
+rownames(selectedGenes) <- paste(FloralIdentityLeavesDescription[match(rownames(selectedGenes),FloralIdentityLeavesDescription$transcriptName),1],FloralIdentityLeavesDescription[match(rownames(selectedGenes),FloralIdentityLeavesDescription$transcriptName),3], sep = "-")
+
+
+rownames(selectedGenes) <- gsub( "rna-","",rownames(selectedGenes))
+
+LogSelectedGenes <- log(selectedGenes+1,10)
+
+LogSelectedGenes <- LogSelectedGenes[rowMeans(LogSelectedGenes) >= 2,]
+
+
+pdf("FloralIdentityLeaf.pdf",h=8.08,w=8.08)
+par(cex.main=1)
+heatmap.2(LogSelectedGenes,
+trace = "none",
+key = T,
+margins = c(10, 15),
+offsetRow = .001,
+ key.xlab="Log(10) FPKM + 1",
+  key.ylab="",
+keysize =1,
+key.title="",
+  cexRow=.457,
+  srtRow=330,
+    col=myCol,
+    main="Floral Identity Genes in Leaves",
+    density.info="density",
+    cexCol=.7)
+dev.off()
+
+
+#FloralIdentitySAMandFBud.tab
+
+myCol <- colorRampPalette(c("white","blue", "red"))(32)
+
+FloralIdentitySAMandFBud <- read.table("FloralIdentitySAMandFBud.tab", sep = "\t")
+
+FloralIdentitySAMandFBudDescription <- genData[ genData$transcriptName %in% FloralIdentitySAMandFBud$V1,]
+
+FloralIdentitySAMandFBudRPKM <- DE.RPKM.matrix[,c(grep("FBud|Sam",colnames(DE.RPKM.matrix)))]
+
+selectedGenes <- FloralIdentitySAMandFBudRPKM[rownames(FloralIdentitySAMandFBudRPKM) %in% FloralIdentitySAMandFBudDescription$transcriptName,]
+
+rownames(selectedGenes) <- paste(FloralIdentitySAMandFBudDescription[match(rownames(selectedGenes),FloralIdentitySAMandFBudDescription$transcriptName),1],FloralIdentitySAMandFBudDescription[match(rownames(selectedGenes),FloralIdentitySAMandFBudDescription$transcriptName),3], sep = "-")
+
+rownames(selectedGenes) <- gsub( "rna-","",rownames(selectedGenes))
+
+LogSelectedGenes <- log(selectedGenes+1,10)
+
+LogSelectedGenes <- LogSelectedGenes[rowMeans(LogSelectedGenes) >= 2,]
+
+##########################
+#FloralIdentitySAMandFBud#
+##########################
+
+pdf("FloralIdentitySAMandFBud.pdf",h=8.08,w=8.08)
+par(cex.main=1)
+heatmap.2(LogSelectedGenes,
+trace = "none",
+key = T,
+margins = c(10, 15),
+offsetRow = .001,
+ key.xlab="Log(10) FPKM + 1",
+  key.ylab="",
+keysize =1,
+key.title="",
+  cexRow=.457,
+  srtRow=330,
+    col=myCol,
+    main="Floral Identity Genes in SAM and FBuds",
+    density.info="density",
+    cexCol=.7)
+dev.off()
+
+###################
+#EthyleneLeaf.tab#
+#################
+
+EthyleneLeaves <- read.table("EthyleneLeaf.tab", sep = "\t")
+
+EthyleneLeavesDescription <- genData[ genData$transcriptName %in% EthyleneLeaves$V1,]
+
+EthyleneleavesRPKM <- DE.RPKM.matrix[,c(grep("Leaf",colnames(DE.RPKM.matrix)))]
+
+selectedGenes <- leavesRPKM[rownames(EthyleneleavesRPKM) %in% EthyleneLeaves$V1,]
+
+rownames(selectedGenes) <- paste(EthyleneLeavesDescription[match(rownames(selectedGenes),EthyleneLeavesDescription$transcriptName),1],EthyleneLeavesDescription[match(rownames(selectedGenes),EthyleneLeavesDescription$transcriptName),3], sep = "-")
+
+rownames(selectedGenes) <- gsub( "rna-","",rownames(selectedGenes))
+
+LogSelectedGenes <- log(selectedGenes+1,10)
+
+LogSelectedGenes <- LogSelectedGenes[rowMeans(LogSelectedGenes) >= 2,]
+
+
+pdf("EthyleneLeaf.pdf",h=8.08,w=8.08)
+par(cex.main=1)
+heatmap.2(LogSelectedGenes,
+trace = "none",
+key = T,
+margins = c(10, 15),
+offsetRow = .001,
+ key.xlab="Log(10) FPKM + 1",
+  key.ylab="",
+keysize =1,
+key.title="",
+  cexRow=.457,
+  srtRow=330,
+    col=myCol,
+    main="Ethylene Genes in Leaves",
+    density.info="density",
+    cexCol=.7)
+dev.off()
+
+
+#########################
+#EthyleneSAMandFBud.tab#
+#######################
+
+EthyleneSAMandFBud <- read.table("EthyleneSAMandFBud.tab", sep = "\t")
+
+EthyleneSAMandFBudDescription <- genData[ genData$transcriptName %in% EthyleneSAMandFBud$V1,]
+
+EthyleneSAMandFBudRPKM <- DE.RPKM.matrix[,c(grep("FBud|Sam",colnames(DE.RPKM.matrix)))]
+
+selectedGenes <- SAMandFBudRPKM[rownames(EthyleneSAMandFBudRPKM) %in% EthyleneSAMandFBud$V1,]
+
+rownames(selectedGenes) <- paste(EthyleneSAMandFBudDescription[match(rownames(selectedGenes),EthyleneSAMandFBudDescription$transcriptName),1],EthyleneSAMandFBudDescription[match(rownames(selectedGenes),EthyleneSAMandFBudDescription$transcriptName),3], sep = "-")
+
+rownames(selectedGenes) <- gsub( "rna-","",rownames(selectedGenes))
+
+LogSelectedGenes <- log(selectedGenes+1,10)
+
+LogSelectedGenes <- LogSelectedGenes[rowMeans(LogSelectedGenes) >= 2,]
+
+
+pdf("EthyleneSAMandFBud.pdf",h=8.08,w=8.08)
+par(cex.main=1)
+heatmap.2(LogSelectedGenes,
+trace = "none",
+key = T,
+margins = c(10, 15),
+offsetRow = .001,
+ key.xlab="Log(10) FPKM + 1",
+  key.ylab="",
+keysize =1,
+key.title="",
+  cexRow=.65,
+  srtRow=330,
+    col=myCol,
+    main="Ethylene Genes in SAM and FBuds",
+    density.info="density",
+    cexCol=.6)
+dev.off()
+
+
+
+
+########################
+#CarbohydratesLeaf.tab#
+######################
+
+CarbohydratesLeaves <- read.table("CarbohydratesLeaf.tab", sep = "\t")
+
+CarbohydratesLeavesDescription <- genData[ genData$transcriptName %in% CarbohydratesLeaves$V1,]
+
+CarbohydratesleavesRPKM <- DE.RPKM.matrix[,c(grep("Leaf",colnames(DE.RPKM.matrix)))]
+
+selectedGenes <- leavesRPKM[rownames(CarbohydratesleavesRPKM) %in% CarbohydratesLeaves$V1,]
+
+rownames(selectedGenes) <- paste(CarbohydratesLeavesDescription[match(rownames(selectedGenes),CarbohydratesLeavesDescription$transcriptName),1],CarbohydratesLeavesDescription[match(rownames(selectedGenes),CarbohydratesLeavesDescription$transcriptName),3], sep = "-")
+
+rownames(selectedGenes) <- gsub( "rna-","",rownames(selectedGenes))
+
+LogSelectedGenes <- log(selectedGenes+1,10)
+
+LogSelectedGenes <- LogSelectedGenes[rowMeans(LogSelectedGenes) >= 2,]
+
+
+pdf("CarbohydratesLeaf.pdf",h=8.08,w=8.08)
+par(cex.main=1)
+heatmap.2(LogSelectedGenes,
+trace = "none",
+key = T,
+margins = c(10, 15),
+offsetRow = .001,
+ key.xlab="Log(10) FPKM + 1",
+  key.ylab="",
+keysize =1,
+key.title="",
+  cexRow=.457,
+  srtRow=330,
+    col=myCol,
+    main="Carbohydrate Genes in Leaves",
+    density.info="density",
+    cexCol=.7)
+dev.off()
+
+
+
+
+
+########################
+#CarbohydratesSAMandFBud.tab#
+######################
+
+CarbohydratesSAMandFBud <- read.table("CarbohydratesSAMandFBud.tab", sep = "\t")
+
+CarbohydratesSAMandFBudDescription <- genData[ genData$transcriptName %in% CarbohydratesSAMandFBud$V1,]
+
+CarbohydratesSAMandFBudRPKM <- DE.RPKM.matrix[,c(grep("FBud|Sam",colnames(DE.RPKM.matrix)))]
+
+selectedGenes <- SAMandFBudRPKM[rownames(CarbohydratesSAMandFBudRPKM) %in% CarbohydratesSAMandFBud$V1,]
+
+rownames(selectedGenes) <- paste(CarbohydratesSAMandFBudDescription[match(rownames(selectedGenes),CarbohydratesSAMandFBudDescription$transcriptName),1],CarbohydratesSAMandFBudDescription[match(rownames(selectedGenes),CarbohydratesSAMandFBudDescription$transcriptName),3], sep = "-")
+
+rownames(selectedGenes) <- gsub( "rna-","",rownames(selectedGenes))
+
+LogSelectedGenes <- log(selectedGenes+1,10)
+
+LogSelectedGenes <- LogSelectedGenes[rowMeans(LogSelectedGenes) >= 2,]
+
+
+pdf("CarbohydratesSAMandFBud.pdf",h=8.08,w=8.08)
+par(cex.main=1)
+heatmap.2(LogSelectedGenes,
+trace = "none",
+key = T,
+margins = c(10, 15),
+offsetRow = .001,
+ key.xlab="Log(10) FPKM + 1",
+  key.ylab="",
+keysize =1,
+key.title="",
+  cexRow=.457,
+  srtRow=330,
+    col=myCol,
+    main="Carbohydrate Genes in SAM and FBuds",
+    density.info="density",
+    cexCol=.6)
+dev.off()
+
+
 #########################################
 #####GO enrichment############################
 ##########################################
